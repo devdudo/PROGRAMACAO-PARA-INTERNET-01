@@ -42,6 +42,58 @@ server.get('/horaAtual', (req, res) => {
     `);
 });
 
+//criar um método que aceita parâmetros na URL, por exemplo: http://localhost:3000/saudacao/eduardo
+server.get('/tabuada', (req, res) => {
+   //Tabuada de qual número o usuário deseja ver?
+   //Até qual sequência o usuário deseja ver a tabuada?
+
+   const numero = parseInt(req.query.numero); //parseInt para converter a string em número inteiro.
+   const sequencia = parseInt(req.query.sequencia); //parseInt para converter a string em número inteiro.
+
+   if(!numero || !sequencia) {
+        res.send(`
+            <DOCTYPE html>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <title>Tabuada</title>
+            </head>
+            <body>
+                <h1>Tabuada</h1>
+                <p>Por favor, forneça os parâmetros corretos na URL.</p>
+                <p>Exemplo: http://localhost:3000/tabuada?numero=5&sequencia=10</p>
+            </body>
+            </html>
+        `);
+   } else {
+        res.setHeader('Content-Type', 'text/html'); //Definir o tipo de conteúdo da resposta como HTML.
+
+        res.write(`
+        <DOCTYPE html>
+            <html lang="pt-br">
+            <head>
+                <meta charset="UTF-8">
+                <title>Tabuada</title>
+            </head>
+            <body>
+                <h1>Tabuada do ${numero} até a sequência ${sequencia}.</h1>
+                <ul>
+        `);
+
+        for(let i = 1; i <= sequencia; i++) {
+            res.write(`<li>${numero} x ${i} = ${numero * i}</li>`);
+        }
+
+        res.write(`
+                </ul>
+            </body>
+            </html>
+        `);
+        
+        res.end(); //Finaliza e envia a resposta ao cliente.
+   }
+});
+
 server.listen(porta, host, () => {
     console.log(`Servidor rodando em http://${host}:${porta}`);
 });
